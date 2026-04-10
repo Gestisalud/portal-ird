@@ -1,0 +1,282 @@
+/* ============================================================
+   ADMIN.CSS  –  Módulo Administrador
+   Imagen Radiológica Diagnóstica S.A.S
+   ============================================================ */
+
+.admin-main {
+  flex: 1;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 32px 24px 60px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  width: 100%;
+}
+
+/* ── ADMIN CARD ─────────────────────────────────────────── */
+.admin-card {
+  padding: 0;
+  overflow: visible;
+}
+
+.admin-card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 22px 28px 18px;
+  border-bottom: 1px solid var(--border);
+}
+
+.admin-card-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(2,132,199,0.12), rgba(99,102,241,0.12));
+  border: 1px solid rgba(2,132,199,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary);
+  flex-shrink: 0;
+}
+
+.admin-card-icon.accent {
+  background: linear-gradient(135deg, rgba(99,102,241,0.12), rgba(168,85,247,0.12));
+  border-color: rgba(99,102,241,0.2);
+  color: var(--accent);
+}
+
+.admin-card-icon svg { width: 20px; height: 20px; }
+
+.admin-card-title {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.2;
+}
+
+.admin-card-sub {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* ── FORM LAYOUT ────────────────────────────────────────── */
+#patient-form {
+  padding: 24px 28px 28px;
+}
+
+.form-section-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-dim);
+  margin: 24px 0 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.form-section-label:first-child { margin-top: 0; }
+
+.form-row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.form-row-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 680px) {
+  .form-row-2, .form-row-3 { grid-template-columns: 1fr; }
+}
+
+/* Inline search (above select) */
+.search-inline {
+  display: block;
+  width: 100%;
+  margin-top: 4px;
+  margin-bottom: 6px;
+  padding: 8px 12px;
+  font-size: 13px;
+  background: var(--form-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  outline: none;
+  font-family: var(--font-main);
+  transition: border-color 0.2s;
+}
+
+.search-inline:focus { border-color: var(--primary); }
+.search-inline::placeholder { color: var(--text-dim); }
+
+/* Study preview */
+.study-preview {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 10px;
+  padding: 12px 14px;
+  background: var(--study-bg);
+  border: 1px solid var(--study-border);
+  border-radius: var(--radius-sm);
+  animation: bannerReveal 0.25s ease;
+}
+
+.study-preview span:first-child { font-size: 24px; }
+.study-preview p { margin: 0; font-size: 13px; color: var(--text); }
+
+/* Form actions */
+.form-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 28px;
+  flex-wrap: wrap;
+}
+
+.btn-primary { margin-top: 0 !important; flex: 1; min-width: 180px; }
+
+/* Toast notification */
+.form-toast {
+  margin-top: 14px;
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  animation: bannerReveal 0.25s ease;
+}
+
+.form-toast.success {
+  background: var(--conf-ban-bg);
+  border: 1px solid var(--conf-ban-br);
+  color: var(--conf-msg-c);
+}
+
+.form-toast.error {
+  background: var(--search-err-bg);
+  border: 1px solid var(--search-err-br);
+  color: var(--err-color);
+}
+
+/* ── PATIENT LIST ────────────────────────────────────────── */
+.list-search-wrap {
+  padding: 16px 28px 0;
+}
+
+.patient-list {
+  padding: 16px 28px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.list-empty {
+  font-size: 14px;
+  color: var(--text-dim);
+  text-align: center;
+  padding: 24px 0;
+}
+
+/* Patient list item */
+.patient-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  background: var(--form-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.patient-item:hover {
+  border-color: var(--primary);
+  background: var(--surface-hov);
+}
+
+.patient-item-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.patient-item-info { flex: 1; min-width: 0; }
+
+.patient-item-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.patient-item-meta {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.patient-item-study {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-top: 2px;
+}
+
+.patient-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.btn-edit, .btn-delete {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.btn-edit { color: var(--primary); }
+.btn-edit:hover { background: rgba(2,132,199,0.08); border-color: var(--primary); }
+
+.btn-delete { color: var(--danger); }
+.btn-delete:hover { background: rgba(220,38,38,0.08); border-color: var(--danger); }
+
+.btn-edit svg, .btn-delete svg { width: 15px; height: 15px; }
+
+/* Admin badge color override */
+.admin-badge { 
+  background: rgba(245,158,11,0.1) !important;
+  border-color: rgba(245,158,11,0.3) !important;
+  color: #d97706 !important;
+}
+
+body.dark-mode .admin-badge {
+  background: rgba(245,158,11,0.12) !important;
+  color: #fbbf24 !important;
+}
+
+@keyframes bannerReveal {
+  from { opacity: 0; transform: scale(0.97); }
+  to   { opacity: 1; transform: scale(1); }
+}
