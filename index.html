@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portal de Citas | Imagen Radiológica Diagnóstica S.A.S</title>
+  <meta name="description" content="Consulta y confirma tu cita médica de forma rápida y segura." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="light-mode">
+
+  <!-- ═══════════════════════ SPLASH SCREEN ═══════════════════════ -->
+  <div id="splash-screen">
+    <!-- Canvas for particle network -->
+    <canvas id="splash-canvas"></canvas>
+
+    <!-- Overlay content -->
+    <div class="splash-overlay">
+
+      <!-- Decorative horizontal rules -->
+      <div class="splash-rule top-rule"></div>
+      <div class="splash-rule bottom-rule"></div>
+
+      <div class="splash-content">
+
+        <!-- Logo block -->
+        <div class="splash-logo-block">
+          <!-- Animated rings -->
+          <div class="splash-rings" aria-hidden="true">
+            <div class="ring ring-1"></div>
+            <div class="ring ring-2"></div>
+            <div class="ring ring-3"></div>
+          </div>
+          <!-- Corner brackets -->
+          <div class="splash-brackets" aria-hidden="true">
+            <span class="brk tl"></span>
+            <span class="brk tr"></span>
+            <span class="brk bl"></span>
+            <span class="brk br"></span>
+          </div>
+          <!-- Logo image -->
+          <img
+            id="splash-logo"
+            src="logo.png"
+            alt="Imagen Radiológica Diagnóstica S.A.S"
+            onerror="this.style.display='none'; document.getElementById('splash-fallback').style.display='flex'"
+          />
+          <!-- Fallback if no logo.png -->
+          <div id="splash-fallback" class="splash-fallback">🏥</div>
+        </div>
+
+        <!-- Company name (words animated individually) -->
+        <div id="splash-company-name" class="splash-company-name">
+          Imagen Radiológica Diagnóstica S.A.S
+        </div>
+
+        <!-- Status + progress -->
+        <div class="splash-footer">
+          <div class="splash-status-row">
+            <span class="splash-status-dot"></span>
+            <span class="splash-status-text" id="splash-status-text">Iniciando sistema...</span>
+          </div>
+          <div class="splash-progress-track">
+            <div class="splash-progress-bar" id="splash-progress-bar"></div>
+          </div>
+          <div class="splash-pct-row">
+            <span id="splash-pct" class="splash-pct">0%</span>
+          </div>
+        </div>
+
+      </div><!-- /splash-content -->
+    </div><!-- /splash-overlay -->
+  </div><!-- /splash-screen -->
+
+
+  <!-- ═══════════════════════ MAIN APP ═══════════════════════ -->
+  <div id="app" class="hidden">
+
+    <!-- Header -->
+    <header class="site-header">
+      <div class="header-inner">
+        <div class="header-left">
+          <button id="theme-toggle" class="theme-toggle" title="Cambiar modo">
+            <span class="theme-icon theme-icon-sun">☀️</span>
+            <span class="theme-icon theme-icon-moon">🌙</span>
+            <span class="theme-label" id="theme-label">Modo oscuro</span>
+          </button>
+        </div>
+        <div class="header-logo">
+          <img src="logo.png" alt="Logo" class="header-logo-img" onerror="this.style.display='none'" />
+          <div class="header-logo-text">
+            <span class="header-brand">Imagen Radiológica Diagnóstica</span>
+            <span class="header-sub">S.A.S — Portal de Citas</span>
+          </div>
+        </div>
+        <div class="header-right">
+          <div class="header-badge">
+            <span class="badge-dot"></span>
+            Portal de Citas
+          </div>
+          <a href="admin/" class="btn-admin-link" title="Módulo administrador">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+            Admin
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <!-- ── SEARCH SECTION ── -->
+    <main id="search-section" class="section-wrap">
+      <div class="search-card glass-card">
+        <div class="search-header">
+          <div class="search-icon-wrap">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          </div>
+          <div>
+            <h1 class="search-title">Consultar mi cita</h1>
+            <p class="search-subtitle">Ingresa tus datos para ver la cita agendada</p>
+          </div>
+        </div>
+
+        <!-- Firebase notice (hidden until firebase enabled) -->
+        <div id="firebase-notice" class="firebase-notice hidden">
+          <span>🔥</span> Conectado a Firebase — datos en tiempo real
+        </div>
+        <div id="local-notice" class="local-notice">
+          <span>📂</span> Modo demo local — <a href="config/firebase-config.js" target="_blank">configura Firebase</a> para datos en nube
+        </div>
+
+        <form id="search-form" autocomplete="off">
+          <div class="form-group">
+            <label for="doc-type" class="form-label">Tipo de documento</label>
+            <div class="select-wrap">
+              <select id="doc-type" class="form-select" required>
+                <option value="" disabled selected>Seleccionar tipo…</option>
+                <option value="CC">Cédula de Ciudadanía (CC)</option>
+                <option value="CE">Cédula de Extranjería (CE)</option>
+                <option value="TI">Tarjeta de Identidad (TI)</option>
+                <option value="PA">Pasaporte (PA)</option>
+                <option value="RC">Registro Civil (RC)</option>
+                <option value="NIT">NIT</option>
+              </select>
+              <svg class="select-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="doc-number" class="form-label">Número de documento</label>
+            <input
+              type="text"
+              id="doc-number"
+              class="form-input"
+              placeholder="Ej: 1023456789"
+              required
+              inputmode="numeric"
+              pattern="[0-9A-Za-z\-]+"
+            />
+          </div>
+
+          <button type="submit" id="search-btn" class="btn-primary">
+            <span class="btn-text">Buscar mi cita</span>
+            <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+        </form>
+
+        <div id="search-error" class="search-error hidden">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <span id="error-msg">No se encontró ninguna cita con esos datos.</span>
+        </div>
+      </div>
+    </main>
+
+    <!-- ── APPOINTMENT SECTION ── -->
+    <section id="appointment-section" class="section-wrap hidden">
+      <div class="appt-card glass-card">
+
+        <div class="appt-status-bar">
+          <div class="status-badge">
+            <span class="status-dot"></span>
+            Cita Agendada
+          </div>
+          <button id="btn-back" class="btn-ghost">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            Nueva búsqueda
+          </button>
+        </div>
+
+        <div class="patient-greeting">
+          <div class="patient-avatar" id="patient-avatar"></div>
+          <div>
+            <p class="greeting-label">Bienvenido(a)</p>
+            <h2 class="patient-fullname" id="patient-fullname">—</h2>
+          </div>
+        </div>
+
+        <div class="info-grid">
+          <div class="info-section">
+            <h3 class="info-section-title">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              Datos del Paciente
+            </h3>
+            <div class="info-fields">
+              <div class="info-field"><span class="field-label">Tipo de documento</span><span class="field-value" id="info-doctype">—</span></div>
+              <div class="info-field"><span class="field-label">Número de documento</span><span class="field-value" id="info-docnumber">—</span></div>
+              <div class="info-field"><span class="field-label">Edad</span><span class="field-value" id="info-age">—</span></div>
+              <div class="info-field"><span class="field-label">Sexo</span><span class="field-value" id="info-sex">—</span></div>
+              <div class="info-field"><span class="field-label">EPS</span><span class="field-value" id="info-eps">—</span></div>
+              <div class="info-field"><span class="field-label">Celular</span><span class="field-value" id="info-phone">—</span></div>
+              <div class="info-field full-width"><span class="field-label">Dirección</span><span class="field-value" id="info-address">—</span></div>
+            </div>
+          </div>
+
+          <div class="info-section study-section">
+            <h3 class="info-section-title">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
+              Estudio Agendado
+            </h3>
+            <div class="study-card">
+              <div class="study-icon" id="study-icon">🩻</div>
+              <div class="study-info">
+                <p class="study-cups-badge" id="info-study-cups">—</p>
+                <p class="study-type" id="info-study-type">—</p>
+                <p class="study-detail" id="info-study-detail">—</p>
+              </div>
+            </div>
+            <div class="info-fields mt-12">
+              <div class="info-field"><span class="field-label">Fecha</span><span class="field-value highlight" id="info-date">—</span></div>
+              <div class="info-field"><span class="field-label">Hora</span><span class="field-value highlight" id="info-time">—</span></div>
+              <div class="info-field full-width"><span class="field-label">Sede / Sala</span><span class="field-value" id="info-location">—</span></div>
+              <div class="info-field full-width"><span class="field-label">Médico ordenante</span><span class="field-value" id="info-doctor">—</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="confirm-section" id="confirm-section">
+          <div class="confirm-question">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <p>¿La información que aparece es correcta y confirmas tu asistencia a la cita?</p>
+          </div>
+          <div class="confirm-actions">
+            <button id="btn-confirm" class="btn-confirm">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              Sí, confirmo mi cita
+            </button>
+            <button id="btn-report" class="btn-report">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              Datos incorrectos
+            </button>
+          </div>
+        </div>
+
+        <div class="confirmed-banner hidden" id="confirmed-banner">
+          <div class="confirmed-icon">✅</div>
+          <div>
+            <p class="confirmed-title">¡Cita confirmada con éxito!</p>
+            <p class="confirmed-msg">Gracias por confirmar. Te esperamos en la fecha y hora indicadas. Recuerda traer tu documento de identidad y la orden médica.</p>
+          </div>
+        </div>
+
+        <div class="report-banner hidden" id="report-banner">
+          <div class="confirmed-icon">📞</div>
+          <div>
+            <p class="confirmed-title">Comunicar error de datos</p>
+            <p class="confirmed-msg">Por favor comunícate con nuestra línea de atención para corregir tu información antes de la cita.</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <footer class="site-footer">
+      <p>© <span id="year"></span> Imagen Radiológica Diagnóstica S.A.S — Portal de citas Beta</p>
+    </footer>
+
+  </div><!-- /app -->
+
+  <!-- Data files (global vars) -->
+  <script src="config/firebase-config.js"></script>
+  <script src="data/eps.js"></script>
+  <script src="data/studies.js"></script>
+  <script src="data/patients.js"></script>
+  <!-- Splash animation (runs immediately) -->
+  <script src="splash.js"></script>
+  <!-- Main app (Firebase module) -->
+  <script type="module" src="app.js"></script>
+
+</body>
+</html>
